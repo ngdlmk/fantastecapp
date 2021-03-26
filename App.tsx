@@ -56,7 +56,7 @@ const App = () => {
           <FlatList
             ref={flatListRef}
             data={data}
-            keyExtractor={item => item.id}
+            keyExtractor={(item: KeyMoment) => item.id.toString()}
             renderItem={renderCommentItem}
           />
         </View>
