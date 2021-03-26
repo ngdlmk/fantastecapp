@@ -14,26 +14,27 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  FlatList
+  FlatList,
+  ListRenderItem
 } from 'react-native';
 import CommentContent from "./components/CommentContent";
 import data from "./data/fantastec.json";
 import KeyMomentSheet from "./components/KeyMomentsSheet"
 
 export interface KeyMoment {
-  id: Number,
-  minute: Number,
-  keyMomentType: String,
-  content: String
+  id: number,
+  minute: number,
+  keyMomentType: string,
+  content: string
 }
 
 const App = () => {
   const [selectedKeyMomentId, setSelectedKeyMomentId] = useState(null)
   const flatListRef = useRef()
-  const renderCommentItem = ({ item, index }) => {
+  const renderCommentItem: ListRenderItem<KeyMoment> = ({ item, index }) => {
     return (
       <CommentContent
-        id={item.id}
+        id={item.id.toString()}
         content={item.content}
         minute={item.minute}
         keyMomentType={item.keyMomentType}

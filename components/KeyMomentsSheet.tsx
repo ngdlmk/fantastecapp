@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, FlatList, ListRenderItem } from 'react-native'
 import Animated, { withSpring, useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export interface KeyMoment {
-  id: Number,
-  minute: Number,
-  keyMomentType: String,
-  content: String
+  id: number,
+  minute: number,
+  keyMomentType: string,
+  content: string
 }
 
 export interface Props {
@@ -37,14 +37,14 @@ const keyMomentSheet: React.FC<Props> = (props) => {
   }
 
 
-  const renderActionSheetItem = ({ item }) => {
+  const renderActionSheetItem: ListRenderItem<KeyMoment> = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => handleActionSheetSelection(item.id)} style={{ width: '100%', height: 40, flexDirection: 'row' }}>
-        <View style={{ width: 70, height: '100%', alignItems: 'flex-end' }}>
-          <Text style={{ fontSize: 20, fontWeight: '400' }}>{item.minute}</Text>
+      <TouchableOpacity onPress={() => handleActionSheetSelection(item.id)} style={styles.renderItemContainer}>
+        <View style={styles.minuteContainer}>
+          <Text style={styles.itemText}>{item.minute}</Text>
         </View>
-        <View style={{ flex: 1, marginLeft: 40 }}>
-          <Text style={{ fontSize: 20, fontWeight: '400' }}>{item.keyMomentType}</Text>
+        <View style={styles.keyMomentContainer}>
+          <Text style={styles.itemText}>{item.keyMomentType}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -56,19 +56,19 @@ const keyMomentSheet: React.FC<Props> = (props) => {
   }
 
   return (
-    <Animated.View style={[styles.container, animatedStyles]}>
-      <View style={{ height: 60, width: '100%', flexDirection: 'row' }}>
-        <View style={{ width: 60, height: 60 }}></View>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ fontSize: 24, fontWeight: '700' }}>{props.header}</Text>
+    <Animated.View style={[styles.mainContainer, animatedStyles]}>
+      <View style={styles.headerContainer}>
+        <View style={styles.sideContainers}></View>
+        <View style={styles.textContainer}>
+          <Text style={styles.headerText}>{props.header}</Text>
         </View>
-        <View style={{ width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={styles.sideContainers}>
           <TouchableOpacity onPress={actionSheetHandler}>
             <Icon name={actionSheetStatus ? 'chevron-down-circle-outline' : 'chevron-up-circle-outline'} size={32} color="black" />
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={styles.actionSheetContainer}>
         {
           actionSheetStatus ?
             <FlatList
@@ -83,12 +83,58 @@ const keyMomentSheet: React.FC<Props> = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     width: "100%",
     height: 200,
     backgroundColor: 'white',
     borderColor: 'black',
     borderTopWidth: 2
+  },
+  actionSheetContainer: {
+    flex: 1
+  },
+  headerContainer: {
+    height: 60, 
+    width: '100%', 
+    flexDirection: 'row'
+  },
+  sideContainers: {
+    width: 60, 
+    height: 60, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  textContainer: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center'
+  },
+  headerText: {
+    fontSize: 24, 
+    fontWeight: '700'
+  },
+  renderItemContainer: {
+    width: '100%', 
+    height: 40, 
+    flexDirection: 'row'
+  },
+  minuteItemContainer: {
+    width: 70, 
+    height: '100%', 
+    alignItems: 'flex-end'
+  },
+  minuteContainer: {
+    width: 70, 
+    height: '100%', 
+    alignItems: 'flex-end'
+  },
+  keyMomentContainer: {
+    flex: 1, 
+    marginLeft: 40
+  },
+  itemText: {
+    fontSize: 20, 
+    fontWeight: '400'
   }
 });
 
