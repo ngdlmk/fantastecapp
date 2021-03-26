@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, { useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 import {
   SafeAreaView,
@@ -27,25 +27,34 @@ export interface KeyMoment {
   content: String
 }
 
-const renderCommentItem = ({ item, index }) => {
-  return (
-    <CommentContent
-      id={item.id}
-      content={item.content}
-      minute={item.minute}
-      keyMomentType={item.keyMomentType}
-      isLastItem={data.length - 1 === index ? true : false}
-      selected={true}
-    />
-  )
-}
-
 const App = () => {
+  const [selectedKeyMomentId, setSelectedKeyMomentId] = useState(null)
+  const flatListRef = useRef()
+  const renderCommentItem = ({ item, index }) => {
+    return (
+      <CommentContent
+        id={item.id}
+        content={item.content}
+        minute={item.minute}
+        keyMomentType={item.keyMomentType}
+        isLastItem={data.length - 1 === index ? true : false}
+        selected={selectedKeyMomentId === item.id}
+      />
+    )
+  }
+  
+  const handleActionSheetSelection = (id: number) => {
+    const index = data.findIndex((item: KeyMoment) => item.id === id)
+    setSelectedKeyMomentId(data[index].id)
+    flatListRef.current.scrollToIndex({ index })
+  }
+
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.mainContainer}>
         <View style={styles.commentContainer}>
           <FlatList
+            ref={flatListRef}
             data={data}
             keyExtractor={item => item.id}
             renderItem={renderCommentItem}
@@ -55,7 +64,7 @@ const App = () => {
           <KeyMomentSheet
             header="Key Moments"
             keyMoments={data.filter((moment: KeyMoment) => moment.keyMomentType !== null)}
-            onPress={(id: number) => alert(id)}
+            onPress={(id: number) => handleActionSheetSelection(id)}
           />
         </View>
       </View>
